@@ -777,6 +777,7 @@ ${prompt}`;
             response.content,
             folder,
             fileName,
+            selFrom,
             selTo
           );
         }
@@ -795,7 +796,8 @@ ${prompt}`;
     content: string,
     folder: string,
     fileName: string,
-    insertAt: { line: number; ch: number }
+    selFrom: { line: number; ch: number },
+    selTo: { line: number; ch: number }
   ) {
     const date = new Date().toISOString().slice(0, 10);
     const sourceName = view.file?.basename || "unknown";
@@ -828,9 +830,13 @@ ${prompt}`;
 
     await this.app.vault.create(filePath, noteContent);
 
-    // Insert wiki link after the original selection
+    // 先插入链接（紧跟选区末尾），再加高光标记
+    // 顺序：先插后面的，再插前面的，避免偏移
     const linkText = ` [[${fileName}]]`;
-    editor.replaceRange(linkText, insertAt);
+    editor.replaceRange(linkText, selTo);
+    // 插入链接后 selTo 位置不变（在它之后插入），selFrom 也不变
+    editor.replaceRange("==", selTo);
+    editor.replaceRange("==", selFrom);
 
     new Notice(`已创建 ${filePath}`);
 
