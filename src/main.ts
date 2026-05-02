@@ -830,13 +830,10 @@ ${prompt}`;
 
     await this.app.vault.create(filePath, noteContent);
 
-    // 先插入链接（紧跟选区末尾），再加高光标记
-    // 顺序：先插后面的，再插前面的，避免偏移
-    const linkText = ` [[${fileName}]]`;
-    editor.replaceRange(linkText, selTo);
-    // 插入链接后 selTo 位置不变（在它之后插入），selFrom 也不变
-    editor.replaceRange("==", selTo);
-    editor.replaceRange("==", selFrom);
+    // 用单次 replaceRange 替换整个选区：高亮原文 + 链接
+    const originalText = editor.getRange(selFrom, selTo) || "";
+    const replacement = `==${originalText}== [[${fileName}]]`;
+    editor.replaceRange(replacement, selFrom, selTo);
 
     new Notice(`已创建 ${filePath}`);
 
