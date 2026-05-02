@@ -1,0 +1,11 @@
+{
+  "id": "obsidian-ask-llm-link",
+  "name": "Ask LLM & Link",
+  "version": "1.0.0",
+  "minAppVersion": "1.0.0",
+  "description": "选中文本 → 向 LLM 提问 → 回答保存为新笔记 → 原文自动替换为 wiki link",
+  "author": "chensihan",
+  "authorUrl": "",
+  "fundingUrl": "",
+  "isDesktopOnly": false
+}

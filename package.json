@@ -1,0 +1,21 @@
+{
+  "name": "obsidian-ask-llm-link",
+  "version": "1.0.0",
+  "description": "选中文本 → 向 LLM 提问 → 回答保存为新笔记 → 原文自动替换为 wiki link",
+  "main": "main.js",
+  "scripts": {
+    "dev": "node esbuild.config.mjs",
+    "build": "node esbuild.config.mjs production"
+  },
+  "keywords": [],
+  "author": "chensihan",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "builtin-modules": "^3.3.0",
+    "esbuild": "^0.20.0",
+    "obsidian": "latest",
+    "tslib": "2.6.2",
+    "typescript": "5.4.5"
+  }
+}

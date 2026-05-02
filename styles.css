@@ -1,0 +1,64 @@
+.ask-llm-link-modal .modal-title {
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.ask-llm-link-modal textarea {
+  width: 100%;
+  min-height: 120px;
+  font-family: var(--font-text);
+  font-size: var(--font-ui-small);
+  resize: vertical;
+}
+
+.ask-llm-link-modal .selection-preview {
+  background: var(--background-secondary);
+  border-radius: var(--radius-s);
+  padding: 8px 12px;
+  margin-bottom: 12px;
+  font-size: var(--font-ui-small);
+  color: var(--text-muted);
+  max-height: 80px;
+  overflow-y: auto;
+  border-left: 3px solid var(--interactive-accent);
+}
+
+.ask-llm-link-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+}
+
+.ask-llm-link-loading .spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--background-modifier-border);
+  border-top-color: var(--interactive-accent);
+  border-radius: 50%;
+  animation: ask-llm-spin 0.6s linear infinite;
+}
+
+@keyframes ask-llm-spin {
+  to { transform: rotate(360deg); }
+}
+
+.ask-llm-link-folder-modal input {
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.ask-llm-link-folder-modal .folder-suggestions {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.ask-llm-link-folder-modal .suggestion-item {
+  padding: 6px 12px;
+  cursor: pointer;
+  border-radius: var(--radius-s);
+}
+
+.ask-llm-link-folder-modal .suggestion-item:hover {
+  background: var(--background-modifier-hover);
+}
