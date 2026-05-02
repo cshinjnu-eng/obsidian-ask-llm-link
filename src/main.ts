@@ -749,7 +749,9 @@ ${prompt}`;
     ];
 
     try {
+      console.log("Calling LLM with", messages.length, "messages...");
       const response = await callLlm(this.settings, messages, controller.signal);
+      console.log("LLM response received, length:", response.content?.length);
       notice.hide();
 
       // Generate default file name
@@ -771,15 +773,21 @@ ${prompt}`;
         defaultFolder,
         defaultName,
         async (folder, fileName) => {
-          await this.createNoteAndLink(
-            editor,
-            view,
-            response.content,
-            folder,
-            fileName,
-            selFrom,
-            selTo
-          );
+          try {
+            await this.createNoteAndLink(
+              editor,
+              view,
+              response.content,
+              folder,
+              fileName,
+              selFrom,
+              selTo
+            );
+          } catch (err: any) {
+            const msg = err?.message || String(err);
+            new Notice(`创建笔记失败: ${msg}`, 5000);
+            console.error("createNoteAndLink error:", err);
+          }
         }
       ).open();
     } catch (err: any) {
@@ -799,6 +807,8 @@ ${prompt}`;
     selFrom: { line: number; ch: number },
     selTo: { line: number; ch: number }
   ) {
+    console.log("createNoteAndLink called:", { folder, fileName, selFrom, selTo });
+
     const date = new Date().toISOString().slice(0, 10);
     const sourceName = view.file?.basename || "unknown";
 
@@ -829,13 +839,20 @@ ${prompt}`;
     }
 
     await this.app.vault.create(filePath, noteContent);
+    console.log("Note created:", filePath);
 
     // 用单次 replaceRange 替换整个选区：高亮原文 + 链接
-    const originalText = editor.getRange(selFrom, selTo) || "";
-    const replacement = `==${originalText}== [[${fileName}]]`;
-    editor.replaceRange(replacement, selFrom, selTo);
+    const originalText = editor.getRange(selFrom, selTo);
+    if (originalText) {
+      const replacement = `==${originalText}== [[${fileName}]]`;
+      editor.replaceRange(replacement, selFrom, selTo);
+    } else {
+      // 选区已丢失，退回到在当前位置插入链接
+      const cursor = editor.getCursor();
+      editor.replaceRange(` [[${fileName}]]`, cursor);
+    }
 
-    new Notice(`已创建 ${filePath}`);
+    new Notice(`已创建 ${filePath}，链接已插入`);
 
     if (this.settings.autoOpenNote) {
       const file = this.app.vault.getAbstractFileByPath(filePath);
